@@ -4,6 +4,28 @@ import requests
 
 
 class APKPure:
+    """
+    This class provides methods to search for an APK on APKPure based on package name,
+    and to find available versions and their download links for a given APK link.
+
+    Parameters:
+        pkg_name (str): The package name of the APK to search for.
+
+    Attributes:
+        pkg_name (str): The package name of the APK to search for.
+        base_url (str): The base URL of the APKPure website.
+        search_url (str): The URL used to search for APKs on APKPure.
+        headers (dict): The headers used for making HTTP requests.
+        session (requests.Session): The session object used for making HTTP requests.
+
+    Methods:
+        search_apk() -> None | tuple[str, str]:
+            Searches for the APK on APKPure and returns the title and link if found.
+
+        find_versions(apk_link: str) -> list[tuple[str, str]]:
+            Finds and returns a list of versions and their download links for the given APK link.
+    """
+
     def __init__(self, pkg_name: str):
         self.pkg_name = pkg_name
         self.base_url = "https://apkpure.net"
@@ -29,6 +51,13 @@ class APKPure:
         self.session = requests.Session()
 
     def search_apk(self) -> None | tuple[str, str]:
+        """
+        Searches for the APK on APKPure and returns the title and link if found.
+
+        Returns:
+            None: If no matching APK is found.
+            tuple[str, str]: A tuple containing the title and link of the matching APK if found.
+        """
         pkg_name = self.pkg_name
         url = self.search_url + pkg_name
         response = self.session.get(url, headers=self.headers)
@@ -46,6 +75,16 @@ class APKPure:
         return None
 
     def find_versions(self, apk_link: str) -> list[tuple[str, str]]:
+        """
+        Finds and returns a list of versions and their download links for the given APK link.
+
+        Parameters:
+            apk_link (str): The link to the APK on the APKPure website.
+
+        Returns:
+            list[tuple[str, str]]: A list of tuples, where each tuple contains the version number
+            and its corresponding download link. If no versions are found, an empty list is returned.
+        """
         url = apk_link + "/versions"
         response = self.session.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
