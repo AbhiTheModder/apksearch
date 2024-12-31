@@ -30,8 +30,8 @@ class APKMirror:
         self.api_url = self.base_url + "/wp-json/apkm/v1"
         # https://github.com/rumboalla/apkupdater/blob/3.x/app/src/main/kotlin/com/apkupdater/service/ApkMirrorService.kt
         self.headers = {
-            "User-Agent": f"APKUpdater-v3.0.3",
-            "Authorization": f"Basic YXBpLWFwa3VwZGF0ZXI6cm01cmNmcnVVakt5MDRzTXB5TVBKWFc4",
+            "User-Agent": "APKUpdater-v3.0.3",
+            "Authorization": "Basic YXBpLWFwa3VwZGF0ZXI6cm01cmNmcnVVakt5MDRzTXB5TVBKWFc4",
             "Content-Type": "application/json",
         }
         self.session = requests.Session()
@@ -51,7 +51,7 @@ class APKMirror:
             url, json=json, headers=self.headers
         )
         result = response.json()["data"][0]
-        if result and result["exists"] == True:
+        if result and result["exists"]:
             pname = result["pname"]
             if pname == pkg_name:
                 title = result["app"]["name"]
