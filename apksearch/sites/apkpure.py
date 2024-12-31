@@ -60,7 +60,7 @@ class APKPure:
         """
         pkg_name = self.pkg_name
         url = self.search_url + pkg_name
-        response = self.session.get(url, headers=self.headers)
+        response: requests.Response = self.session.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
         search_results = soup.find("div", {"class": "apk-list"})
         if search_results:
@@ -86,7 +86,7 @@ class APKPure:
             and its corresponding download link. If no versions are found, an empty list is returned.
         """
         url = apk_link + "/versions"
-        response = self.session.get(url, headers=self.headers)
+        response: requests.Response = self.session.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
         versions_list = soup.find("ul", {"class": "version-list"})
         versions_info = []
