@@ -2,6 +2,9 @@
 
 `apksearch` is a Python library designed to search for APK files on different APK websites, such as APKPure and APKMirror. It allows users to find APKs, check for available versions, and retrieve download links.
 
+**The Inspiration:**
+There were countless occasions when I needed a specific APK for a package name, only to find it unavailable on popular platforms. This led to the tedious task of manually visiting multiple websites and searching one by one.
+
 # Features
 
 - **Search APKs:** The library provides methods to search for APKs using package names.
