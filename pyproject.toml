@@ -39,5 +39,8 @@ dev = ["pytest>=7.4.3", "black>=23.12.1", "flake8>=6.1.0"]
 minversion = "7.4.3"
 testpaths = ["tests"]
 
+[project.scripts]
+apksearch = "apksearch.cli:main"
+
 [tool.setuptools]
 packages = ["apksearch", "apksearch.sites"]
