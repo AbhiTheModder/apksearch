@@ -82,6 +82,12 @@ if result:
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
 - **`search_apk(self, version: str = None) -> None | tuple[str, str]`**: Searches for the APK on AppTeka and returns the title and link if found. If a version is provided, it checks if that version is available and returns the corresponding download link, None otherwise. If no version is provided, it returns the link for the latest version available.
 
+#### `APKCombo`
+
+- **`__init__(self, pkg_name: str)`**: Initializes with the package name.
+- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK on APKCombo and returns the title and link if found.
+- **`find_versions(self, apk_link: str) -> list[tuple[str, str]]`**: Finds and returns a list of versions and their download links for the given APK link.
+
 ### Testing
 
 The project includes tests for the `sites` classes. To run the tests, use the following command:

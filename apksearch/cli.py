@@ -1,6 +1,6 @@
 import argparse
 
-from apksearch import APKPure, APKMirror, AppTeka
+from apksearch import APKPure, APKMirror, AppTeka, APKCombo
 from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
@@ -36,15 +36,40 @@ def search_apkpure(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}APKPure:{NC} No Results!")
 
 
+def search_apkcombo(pkg_name: str, version: str | None) -> None:
+    apkcombo = APKCombo(pkg_name)
+    try:
+        result_apkcombo: tuple[str, str] | None = apkcombo.search_apk()
+    except (ConnectionError, ConnectTimeout):
+        result_apkcombo = None
+        print(f"{RED}Failed to resolve 'apkcombo.app'!{NC}")
+    if result_apkcombo:
+        title, apk_link = result_apkcombo
+        print(f"{BOLD}APKCombo:{NC} Found {GREEN}{title}{NC}") if title else None
+        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
+        versions: list[tuple[str, str]] = apkcombo.find_versions(apk_link)
+        if version:
+            for version_tuple in versions:
+                if version_tuple[0] == version:
+                    print(
+                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
+                    )
+                    break
+            else:
+                print(f"{BOLD}APKCombo:{NC} Version {RED}{version}{NC} not found!")
+    else:
+        print(f"{BOLD}APKCombo:{NC} No Results!")
+
+
 def search_apkmirror(pkg_name: str, version: str | None) -> None:
     apkmirror = APKMirror(pkg_name)
     try:
-        result_apkpure: tuple[str, str] | None = apkmirror.search_apk()
+        result_apkmirror: tuple[str, str] | None = apkmirror.search_apk()
     except (ConnectionError, ConnectTimeout):
-        result_apkpure = None
+        result_apkmirror = None
         print(f"{RED}Failed to resolve 'apkmirror.com'!{NC}")
-    if result_apkpure:
-        title, apk_link = result_apkpure
+    if result_apkmirror:
+        title, apk_link = result_apkmirror
         print(f"{BOLD}APKMirror:{NC} Found {GREEN}{title}{NC}") if title else None
         print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
         if version:
@@ -62,12 +87,12 @@ def search_apkmirror(pkg_name: str, version: str | None) -> None:
 def search_appteka(pkg_name: str, version: str | None) -> None:
     appteka = AppTeka(pkg_name)
     try:
-        result_apkpure: tuple[str, str] | None = appteka.search_apk(version)
+        result_appteka: tuple[str, str] | None = appteka.search_apk(version)
     except (ConnectionError, ConnectTimeout):
-        result_apkpure = None
+        result_appteka = None
         print(f"{RED}Failed to resolve 'appteka.store'!{NC}")
-    if result_apkpure:
-        title, apk_link = result_apkpure
+    if result_appteka:
+        title, apk_link = result_appteka
         print(f"{BOLD}AppTeka:{NC} Found {GREEN}{title}{NC}") if title else None
         if version:
             if apk_link:
@@ -99,6 +124,8 @@ def main():
     search_apkmirror(pkg_name, version)
     # Initiate search on appteka
     search_appteka(pkg_name, version)
+    # Initiate search on apkcombo
+    search_apkcombo(pkg_name, version)
 
 
 if __name__ == "__main__":
