@@ -12,7 +12,7 @@ class APKMirror:
     Attributes:
         pkg_name (str): The package name of the APK to search for.
         base_url (str): The base URL of the APKMirror website.
-        search_url (str): The URL used to search for APKs on APKMirror.
+        api_url (str): The base URL for the APKMirror API.
         headers (dict): The headers used for making HTTP requests.
         session (requests.Session): The session object used for making HTTP requests.
 

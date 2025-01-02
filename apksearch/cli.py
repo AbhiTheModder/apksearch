@@ -1,6 +1,6 @@
 import argparse
 
-from apksearch import APKPure, APKMirror
+from apksearch import APKPure, APKMirror, AppTeka
 from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
@@ -59,6 +59,29 @@ def search_apkmirror(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}APKMirror:{NC} No Results!")
 
 
+def search_appteka(pkg_name: str, version: str | None) -> None:
+    appteka = AppTeka(pkg_name)
+    try:
+        result_apkpure: tuple[str, str] | None = appteka.search_apk(version)
+    except (ConnectionError, ConnectTimeout):
+        result_apkpure = None
+        print(f"{RED}Failed to resolve 'appteka.store'!{NC}")
+    if result_apkpure:
+        title, apk_link = result_apkpure
+        print(f"{BOLD}AppTeka:{NC} Found {GREEN}{title}{NC}") if title else None
+        if version:
+            if apk_link:
+                print(
+                    f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{apk_link}{NC}"
+                )
+            else:
+                print(f"{BOLD}AppTeka:{NC} Version {RED}{version}{NC} not found!")
+        else:
+            print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}")
+    else:
+        print(f"{BOLD}AppTeka:{NC} No Results!")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="APKSearch", description="Search for APKs on various websites"
@@ -74,6 +97,9 @@ def main():
     search_apkpure(pkg_name, version)
     # Initiate search on apkmirror
     search_apkmirror(pkg_name, version)
+    # Initiate search on appteka
+    search_appteka(pkg_name, version)
+
 
 if __name__ == "__main__":
     main()
