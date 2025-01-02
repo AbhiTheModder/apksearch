@@ -72,7 +72,10 @@ class APKCombo:
         else:
             raise Exception(f"Error: {response.status_code}")
         soup = BeautifulSoup(response.text, "html.parser")
-        title = soup.find("div", {"class": "app_name"}).text.strip()
+        try:
+            title = soup.find("div", {"class": "app_name"}).text.strip()
+        except AttributeError:
+            return None
         apk_link = url
         return title, apk_link
 
