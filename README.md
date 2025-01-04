@@ -30,13 +30,13 @@ There were countless occasions when I needed a specific APK for a package name, 
 To install the `apksearch` library, use the following command:
 
 ```sh
-pip install git+https://github.com/AbhiTheModder/apksearch.git
+pip install -U git+https://github.com/AbhiTheModder/apksearch.git
 ```
 
 OR, through pip:
 
 ```sh
-pip install apksearch
+pip install -U apksearch
 ```
 
 ## Usage
