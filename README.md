@@ -19,7 +19,8 @@ There were countless occasions when I needed a specific APK for a package name, 
 - [APKFab](https://apkfab.com/)
 - [Appteka](https://appteka.store/)
 
-> [!NOTE] > **For site owners:**
+> [!NOTE]
+> **For site owners:**
 > If you're the owner of a website that's not listed here and you'd like to add support for it, feel free to open an issue or submit a pull request. I'm open to adding more websites to the library.
 > I respect the _value of user engagement and the revenue_ it generates for your site. To honor this, I have deliberately avoided including a download feature in the library, ensuring users will still need to visit your website, maintaining its traffic and engagement.
 > Additionally, I kindly ask that you **refrain from enforcing strict blocking measures**, such as aggressive Cloudflare rules, as the library is designed to work collaboratively rather than disruptively. Thank you!
