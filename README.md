@@ -19,8 +19,7 @@ There were countless occasions when I needed a specific APK for a package name, 
 - [APKFab](https://apkfab.com/)
 - [Appteka](https://appteka.store/)
 
-> [!NOTE]
-> **For site owners:**
+> [!NOTE] > **For site owners:**
 > If you're the owner of a website that's not listed here and you'd like to add support for it, feel free to open an issue or submit a pull request. I'm open to adding more websites to the library.
 > I respect the _value of user engagement and the revenue_ it generates for your site. To honor this, I have deliberately avoided including a download feature in the library, ensuring users will still need to visit your website, maintaining its traffic and engagement.
 > Additionally, I kindly ask that you **refrain from enforcing strict blocking measures**, such as aggressive Cloudflare rules, as the library is designed to work collaboratively rather than disruptively. Thank you!
@@ -108,6 +107,13 @@ pytest
 
 - [ ] Add more websites to search for APKs.
 
+## Acknowledgements
+
+- [APKUpdater](https://github.com/rumboalla/apkupdater) for integrating the APKMirror API.
+- [apkeep](https://github.com/EFForg/apkeep) for providing the APKPure API.
+
+**Recommendation:** If you're looking for an APK downloader, I highly recommend using [apkeep](https://github.com/EFForg/apkeep).
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/AbhiTheModder/apksearch/blob/main/LICENSE) file for more details.
@@ -115,3 +121,5 @@ This project is licensed under the MIT License. See the [LICENSE](https://github
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/AbhiTheModder/apksearch).
+
+If you find this project helpful, please consider giving it a ⭐. Your support is greatly appreciated!
