@@ -1,14 +1,23 @@
-# apksearch
+<h1 align="center">apksearch</h1>
 
 `apksearch` is a Python library designed to search for APK files on different APK websites, such as APKPure and APKMirror. It allows users to find APKs, check for available versions, and retrieve download links.
 
 **The Inspiration:**
 There were countless occasions when I needed a specific APK for a package name, only to find it unavailable on popular platforms. This led to the tedious task of manually visiting multiple websites and searching one by one.
+<details>
+    <summary>screenshot</summary>
+    <p align="center">
+        <img width="500" src="https://github.com/user-attachments/assets/cd54eaeb-a56b-40b3-835f-b48b1e7772f3"></img><br>
+        As you can see, Roblox version <code>2.647.716</code> is not available on APKPure and APKCombo, this helped me avoid going through these sites.
+    </p>
+</details>
+
+**P.S:** If you're looking for an APK downloader, I highly recommend using [apkeep](https://github.com/EFForg/apkeep).
 
 # Features
 
 - **Search APKs:** The library provides methods to search for APKs using package names.
-- **Retrieve APK Versions and Download Links:** It can fetch available versions and their download links for a given APK from APKPure and APKMirror.
+- **Retrieve APK Versions and Download Links:** It can fetch available versions and their download links for a given APK from various websites.
 - **Command-Line Interface:** A CLI is available for users to search for APKs directly from the command line.
 
 ## Supported Websites
@@ -112,8 +121,6 @@ pytest
 
 - [APKUpdater](https://github.com/rumboalla/apkupdater) for APKMirror API.
 - [apkeep](https://github.com/EFForg/apkeep) for APKPure API.
-
-**Recommendation:** If you're looking for an APK downloader, I highly recommend using [apkeep](https://github.com/EFForg/apkeep).
 
 ## License
 
