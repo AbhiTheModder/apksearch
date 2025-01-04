@@ -1,6 +1,6 @@
 import argparse
 
-from apksearch import APKPure, APKMirror, AppTeka, APKCombo
+from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab
 from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
@@ -31,10 +31,36 @@ def search_apkpure(pkg_name: str, version: str | None) -> None:
                             f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
                         )
                         break
-            else:
-                print(f"{BOLD}APKPure:{NC} Version {RED}{version}{NC} not found!")
+                else:
+                    print(f"{BOLD}APKPure:{NC} Version {RED}{version}{NC} not found!")
     else:
         print(f"{BOLD}APKPure:{NC} No Results!")
+
+
+def search_apkfab(pkg_name: str, version: str | None) -> None:
+    apkfab = APKFab(pkg_name)
+    try:
+        result_apkfab: tuple[str, str] | None = apkfab.search_apk()
+    except (ConnectionError, ConnectTimeout):
+        result_apkfab = None
+        print(f"{RED}Failed to resolve 'apkfab.com'!{NC}")
+    if result_apkfab:
+        title, apk_link = result_apkfab
+        print(f"{BOLD}APKFab:{NC} Found {GREEN}{title}{NC}") if title else None
+        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
+        if version:
+            versions: list[tuple[str, str]] = apkfab.find_versions(apk_link)
+            if versions:
+                for version_tuple in versions:
+                    if version_tuple[0] == version:
+                        print(
+                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
+                        )
+                        break
+                else:
+                    print(f"{BOLD}APKFab:{NC} Version {RED}{version}{NC} not found!")
+    else:
+        print(f"{BOLD}APKFab:{NC} No Results!")
 
 
 def search_apkcombo(pkg_name: str, version: str | None) -> None:
@@ -127,6 +153,8 @@ def main():
     search_appteka(pkg_name, version)
     # Initiate search on apkcombo
     search_apkcombo(pkg_name, version)
+    # Initiate search on apkfab
+    search_apkfab(pkg_name, version)
 
 
 if __name__ == "__main__":

@@ -11,6 +11,19 @@ There were countless occasions when I needed a specific APK for a package name, 
 - **Retrieve APK Versions and Download Links:** It can fetch available versions and their download links for a given APK from APKPure and APKMirror.
 - **Command-Line Interface:** A CLI is available for users to search for APKs directly from the command line.
 
+## Supported Websites
+
+- [APKPure](https://apkpure.net/)
+- [APKMirror](https://www.apkmirror.com/)
+- [APKCombo](https://apkcombo.app/)
+- [APKFab](https://apkfab.com/)
+- [Appteka](https://appteka.store/)
+
+> [!NOTE] > **For site owners:**
+> If you're the owner of a website that's not listed here and you'd like to add support for it, feel free to open an issue or submit a pull request. I'm open to adding more websites to the library.
+> Please note that I respect the value of user engagement and the revenue it generates for your site. To honor this, I have deliberately avoided including a download feature in the library, ensuring users will still need to visit your website, maintaining its traffic and engagement.
+> Additionally, I kindly ask that you refrain from enforcing strict blocking measures, such as aggressive Cloudflare rules, as the library is designed to work collaboratively rather than disruptively. Thank you!
+
 ## Installation
 
 To install the `apksearch` library, use the following command:
@@ -65,7 +78,7 @@ if result:
 
 ### Classes and Methods
 
-#### `APKPure`
+#### `APKPure` | `APKCombo` | `APKFab`
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
 - **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK on APKPure and returns the title and link if found.
@@ -81,12 +94,6 @@ if result:
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
 - **`search_apk(self, version: str = None) -> None | tuple[str, str]`**: Searches for the APK on AppTeka and returns the title and link if found. If a version is provided, it checks if that version is available and returns the corresponding download link, None otherwise. If no version is provided, it returns the link for the latest version available.
-
-#### `APKCombo`
-
-- **`__init__(self, pkg_name: str)`**: Initializes with the package name.
-- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK on APKCombo and returns the title and link if found.
-- **`find_versions(self, apk_link: str) -> list[tuple[str, str]]`**: Finds and returns a list of versions and their download links for the given APK link.
 
 ### Testing
 
