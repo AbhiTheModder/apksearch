@@ -109,8 +109,8 @@ pytest
 
 ## Acknowledgements
 
-- [APKUpdater](https://github.com/rumboalla/apkupdater) for integrating the APKMirror API.
-- [apkeep](https://github.com/EFForg/apkeep) for providing the APKPure API.
+- [APKUpdater](https://github.com/rumboalla/apkupdater) for APKMirror API.
+- [apkeep](https://github.com/EFForg/apkeep) for APKPure API.
 
 **Recommendation:** If you're looking for an APK downloader, I highly recommend using [apkeep](https://github.com/EFForg/apkeep).
 
