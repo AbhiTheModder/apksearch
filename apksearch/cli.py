@@ -22,14 +22,15 @@ def search_apkpure(pkg_name: str, version: str | None) -> None:
         title, apk_link = result_apkpure
         print(f"{BOLD}APKPure:{NC} Found {GREEN}{title}{NC}") if title else None
         print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
-        versions: list[tuple[str, str]] = apkpure.find_versions(apk_link)
         if version:
-            for version_tuple in versions:
-                if version_tuple[0] == version:
-                    print(
-                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
-                    )
-                    break
+            versions: list[tuple[str, str]] = apkpure.find_versions(apk_link)
+            if versions:
+                for version_tuple in versions:
+                    if version_tuple[0] == version:
+                        print(
+                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
+                        )
+                        break
             else:
                 print(f"{BOLD}APKPure:{NC} Version {RED}{version}{NC} not found!")
     else:

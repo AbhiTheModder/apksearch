@@ -29,6 +29,8 @@ class APKPure:
     def __init__(self, pkg_name: str):
         self.pkg_name = pkg_name
         self.base_url = "https://apkpure.net"
+        self.cdn_url = "https://d.cdnpure.com/b/APK/"
+        self.cdn_version = "?version="
         self.search_url = self.base_url + "/search?q="
         self.headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -72,6 +74,29 @@ class APKPure:
                     apk_package_name = apk_item["data-dt-pkg"]
                     if apk_package_name == pkg_name:
                         return apk_title, apk_link
+        # If site search resulted 0 results, try cdn link
+        # https://github.com/AbhiTheModder/apksearch/issues/2
+        url = self.cdn_url + pkg_name + self.cdn_version + "latest"
+        response: requests.Response = self.session.get(
+            url, headers=self.headers, allow_redirects=False
+        )
+        try:
+            location = response.headers.get("Location")
+        except AttributeError:
+            return None
+        if location:
+            if location == "https://apkpure.com":
+                return None
+            response: requests.Response = self.session.head(
+                location, allow_redirects=False
+            )
+            try:
+                content = response.headers.get("Content-Disposition")
+            except AttributeError:
+                return None
+            if content:
+                apk_title = content.split("filename=")[1].strip('"').split("_")[0]
+                return apk_title, location
         return None
 
     def find_versions(self, apk_link: str) -> list[tuple[str, str]]:
@@ -85,24 +110,24 @@ class APKPure:
             list[tuple[str, str]]: A list of tuples, where each tuple contains the version number
             and its corresponding download link. If no versions are found, an empty list is returned.
         """
-        url = apk_link + "/versions"
-        response: requests.Response = self.session.get(url, headers=self.headers)
-        soup = BeautifulSoup(response.text, "html.parser")
-        versions_list = soup.find("ul", {"class": "version-list"})
         versions_info = []
+        if apk_link.startswith(self.base_url):
+            url = apk_link + "/versions"
+            response: requests.Response = self.session.get(url, headers=self.headers)
+            soup = BeautifulSoup(response.text, "html.parser")
+            versions_list = soup.find("ul", {"class": "version-list"})
 
-        if versions_list:
-            versions = versions_list.find_all(
-                "li", {"class": re.compile("^version dt-version-item.*")}
-            )
-            for version in versions:
-                version_icon = version.find("a", {"class": "dt-version-icon"})
-                version_info = version.find("div", {"class": "version-info"})
-                if version_icon and version_info:
-                    version_number = version_info.find(
-                        "span", {"class": "name one-line"}
-                    ).text
-                    download_url = self.base_url + version_icon["href"]
-                    versions_info.append((version_number, download_url))
-
+            if versions_list:
+                versions = versions_list.find_all(
+                    "li", {"class": re.compile("^version dt-version-item.*")}
+                )
+                for ver in versions:
+                    version_icon = ver.find("a", {"class": "dt-version-icon"})
+                    version_info = ver.find("div", {"class": "version-info"})
+                    if version_icon and version_info:
+                        version_number = version_info.find(
+                            "span", {"class": "name one-line"}
+                        ).text
+                        download_url = self.base_url + version_icon["href"]
+                        versions_info.append((version_number, download_url))
         return versions_info
