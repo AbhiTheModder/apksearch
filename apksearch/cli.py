@@ -1,6 +1,6 @@
 import argparse
 
-from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab
+from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab, APKAD
 from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
@@ -61,6 +61,23 @@ def search_apkfab(pkg_name: str, version: str | None) -> None:
                     print(f"{BOLD}APKFab:{NC} Version {RED}{version}{NC} not found!")
     else:
         print(f"{BOLD}APKFab:{NC} No Results!")
+
+
+def search_apkad(pkg_name: str, version: str | None) -> None:
+    apkad = APKAD(pkg_name)
+    try:
+        result_apkad: tuple[str, str] | None = apkad.search_apk()
+    except (ConnectionError, ConnectTimeout):
+        result_apkad = None
+        print(f"{RED}Failed to resolve 'api.apk.ad'!{NC}")
+    if result_apkad:
+        title, apk_link = result_apkad
+        print(f"{BOLD}APKAD:{NC} Found {GREEN}{title}{NC}") if title else None
+        print(
+            f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}"
+        ) if not version else print("      ╰─> Doesn't support version search!")
+    else:
+        print(f"{BOLD}APKAD:{NC} No Results!")
 
 
 def search_apkcombo(pkg_name: str, version: str | None) -> None:
@@ -155,6 +172,8 @@ def main():
     search_apkcombo(pkg_name, version)
     # Initiate search on apkfab
     search_apkfab(pkg_name, version)
+    # Initiate search on apkad
+    search_apkad(pkg_name, version)
 
 
 if __name__ == "__main__":

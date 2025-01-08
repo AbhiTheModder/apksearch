@@ -3,7 +3,7 @@ requires-python = ">=3.10"
 
 [[package]]
 name = "apksearch"
-version = "1.2.0"
+version = "1.2.5"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
