@@ -27,6 +27,7 @@ There were countless occasions when I needed a specific APK for a package name, 
 - [APKCombo](https://apkcombo.app/)
 - [APKFab](https://apkfab.com/)
 - [Appteka](https://appteka.store/)
+- [APKAD](https://apk.ad/)
 
 > [!NOTE]
 > **For site owners:**
