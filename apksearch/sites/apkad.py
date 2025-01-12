@@ -72,6 +72,8 @@ class APKAD:
             data = json.loads(stream_response)
             html_body = data["html"]
             soup = BeautifulSoup(html_body, "html.parser")
+            if not soup:
+                return None
             title = soup.find("li", {"class": "_title"}).text.strip()
             if title:
                 button = soup.find(
