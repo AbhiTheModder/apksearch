@@ -74,8 +74,9 @@ class APKAD:
             soup = BeautifulSoup(html_body, "html.parser")
             if not soup:
                 return None
-            title = soup.find("li", {"class": "_title"}).text.strip()
+            title = soup.find("li", {"class": "_title"})
             if title:
+                title = title.text.strip()
                 button = soup.find(
                     "button", {"onclick": True, "id": "downloadButtonapk"}
                 )["onclick"]
