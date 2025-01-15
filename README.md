@@ -101,7 +101,7 @@ if result:
 - **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK on APKMirror and returns the title and link if found.
 - **`find_version(self, apk_link: str, version: str) -> str`**: Finds and returns the download link for the given APK link and version.
 
-#### `AppTeka`
+#### `AppTeka` | `APKAD`
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
 - **`search_apk(self, version: str = None) -> None | tuple[str, str]`**: Searches for the APK on AppTeka and returns the title and link if found. If a version is provided, it checks if that version is available and returns the corresponding download link, None otherwise. If no version is provided, it returns the link for the latest version available.
