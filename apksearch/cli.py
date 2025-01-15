@@ -1,5 +1,6 @@
 import argparse
 
+from collections.abc import Callable
 from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab, APKAD
 from requests.exceptions import ConnectionError, ConnectTimeout
 
@@ -9,6 +10,21 @@ RED = "\033[91m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
 NC = "\033[0m"
+
+
+def search(
+    func: Callable[[str, str], object],
+    pkg_name: str,
+    version: str | None,
+    log_err: bool = False,
+) -> None:
+    try:
+        func(pkg_name, version)
+    except Exception as exc:
+        if log_err:
+            print(f"Error in {func.__name__}: {exc}")
+        else:
+            pass
 
 
 def search_apkpure(pkg_name: str, version: str | None) -> None:
@@ -157,23 +173,27 @@ def main():
     )
     parser.add_argument("pkg_name", help="The package name of the APK")
     parser.add_argument("--version", help="The version of the APK", required=False)
+    parser.add_argument(
+        "--log_err", help="Enable error logs", action="store_true", required=False
+    )
     args = parser.parse_args()
 
     pkg_name = args.pkg_name
     version = args.version
+    log_err = args.log_err
     print(f"{BOLD}Searching for {YELLOW}{pkg_name}{NC}...")
     # Initiate search on apkpure
-    search_apkpure(pkg_name, version)
+    search(search_apkpure, pkg_name, version, log_err)
     # Initiate search on apkmirror
-    search_apkmirror(pkg_name, version)
+    search(search_apkmirror, pkg_name, version, log_err)
     # Initiate search on appteka
-    search_appteka(pkg_name, version)
+    search(search_appteka, pkg_name, version, log_err)
     # Initiate search on apkcombo
-    search_apkcombo(pkg_name, version)
+    search(search_apkcombo, pkg_name, version, log_err)
     # Initiate search on apkfab
-    search_apkfab(pkg_name, version)
+    search(search_apkfab, pkg_name, version, log_err)
     # Initiate search on apkad
-    search_apkad(pkg_name, version)
+    search(search_apkad, pkg_name, version, log_err)
 
 
 if __name__ == "__main__":
