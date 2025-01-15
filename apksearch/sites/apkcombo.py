@@ -28,7 +28,7 @@ class APKCombo:
     def __init__(self, pkg_name: str):
         self.pkg_name = pkg_name
         self.base_url = "https://apkcombo.app"
-        self.search_url = self.base_url + "/search/"
+        self.search_url = self.base_url + "/search"
         self.headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
@@ -59,7 +59,7 @@ class APKCombo:
             tuple[str, str]: A tuple containing the title and link of the matching APK if found.
         """
         pkg_name = self.pkg_name
-        url = self.search_url + pkg_name
+        url = self.search_url + "/" + pkg_name
         response: requests.Response = self.session.get(
             url, headers=self.headers, allow_redirects=False
         )
