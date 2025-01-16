@@ -37,7 +37,7 @@ There were countless occasions when I needed a specific APK for a package name, 
 
 ## Installation
 
-To install the `apksearch` library, use the following command:
+To install/upgrade the `apksearch` library, use the following command:
 
 ```sh
 pip install -U git+https://github.com/AbhiTheModder/apksearch.git
@@ -47,6 +47,12 @@ OR, through pip:
 
 ```sh
 pip install -U apksearch
+```
+
+OR, if you've cloned the repository locally you can do so via:
+
+```sh
+pip install -U . # or path to the local clone
 ```
 
 ## Usage
@@ -92,19 +98,19 @@ if result:
 #### `APKPure` | `APKCombo` | `APKFab`
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
-- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK on APKPure and returns the title and link if found.
+- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK and returns the title and link if found.
 - **`find_versions(self, apk_link: str) -> list[tuple[str, str]]`**: Finds and returns a list of versions and their download links for the given APK link.
 
 #### `APKMirror`
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
-- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK on APKMirror and returns the title and link if found.
+- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK and returns the title and link if found.
 - **`find_version(self, apk_link: str, version: str) -> str`**: Finds and returns the download link for the given APK link and version.
 
 #### `AppTeka` | `APKAD`
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
-- **`search_apk(self, version: str = None) -> None | tuple[str, str]`**: Searches for the APK on AppTeka and returns the title and link if found. If a version is provided, it checks if that version is available and returns the corresponding download link, None otherwise. If no version is provided, it returns the link for the latest version available.
+- **`search_apk(self, version: str = None) -> None | tuple[str, str]`**: Searches for the APK and returns the title and link if found. If a version is provided, it checks if that version is available and returns the corresponding download link, None otherwise. If no version is provided, it returns the link for the latest version available.
 
 ### Testing
 
