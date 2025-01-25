@@ -117,7 +117,7 @@ if result:
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
 - **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK and returns the title and link if found.
-- **`find_version(self, apk_link: str, version: str) -> list[str]`**: Finds and returns the download links for the given APK link and versions list.
+- **`find_versions(self, apk_link: str, version: str) -> list[str]`**: Finds and returns the download links for the given APK link and versions list.
 
 ### Testing
 
