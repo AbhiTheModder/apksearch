@@ -31,7 +31,7 @@ def test_find_versions_nfound():
 
 def test_find_versions_found():
     query = "com.roblox.client"
-    version = "2.652.765"
+    version = "2.654.474"
     apkmirror = APKMirror(query)
     result = apkmirror.search_apk()
 
