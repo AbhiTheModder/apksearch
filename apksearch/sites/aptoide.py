@@ -13,7 +13,7 @@ class Aptoide:
 
     Attributes:
         pkg_name (str): The package name of the APK to search for.
-        base_url (str): The base URL of the Aptoide website.
+        api_url (str): The base URL for the Aptoide API.
         search_url (str): The URL used to search for APKs on Aptoide.
         headers (dict): The headers used for making HTTP requests.
         session (requests.Session): The session object used for making HTTP requests.
@@ -22,8 +22,8 @@ class Aptoide:
         search_apk() -> None | tuple[str, str]:
             Searches for the APK on Aptoide and returns the title and link if found.
 
-        find_versions(apk_link: str) -> list[tuple[str, str]]:
-            Finds and returns a list of versions and their download links for the given APK link.
+        find_versions(apk_link: str) -> list[str | None]:
+            Finds and returns a list of versions for the given APK link.
     """
 
     def __init__(self, pkg_name: str):
