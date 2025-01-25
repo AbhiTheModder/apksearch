@@ -1,7 +1,7 @@
 import argparse
 
 from collections.abc import Callable
-from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab, APKAD, Aptoide
+from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab, APKad, Aptoide
 from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
@@ -80,7 +80,7 @@ def search_apkfab(pkg_name: str, version: str | None) -> None:
 
 
 def search_apkad(pkg_name: str, version: str | None) -> None:
-    apkad = APKAD(pkg_name)
+    apkad = APKad(pkg_name)
     try:
         result_apkad: tuple[str, str] | None = apkad.search_apk()
     except (ConnectionError, ConnectTimeout):

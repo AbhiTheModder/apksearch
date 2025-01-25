@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 
 
-class APKAD:
+class APKad:
     """
     This class provides methods to search for an APK on APKAD based on package name,
     and to find available versions and their download links for a given APK link.
