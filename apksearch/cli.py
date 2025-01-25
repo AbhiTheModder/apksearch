@@ -1,7 +1,7 @@
 import argparse
 
 from collections.abc import Callable
-from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab, APKAD
+from apksearch import APKPure, APKMirror, AppTeka, APKCombo, APKFab, APKAD, Aptoide
 from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
@@ -167,6 +167,30 @@ def search_appteka(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}AppTeka:{NC} No Results!")
 
 
+def search_aptoide(pkg_name: str, version: str | None) -> None:
+    aptoide = Aptoide(pkg_name)
+    try:
+        result_aptoide: tuple[str, str] | None = aptoide.search_apk()
+    except (ConnectionError, ConnectTimeout):
+        result_aptoide = None
+        print(f"{RED}Failed to resolve 'aptoide.com'!{NC}")
+    if result_aptoide:
+        title, apk_link = result_aptoide
+        print(f"{BOLD}Aptoide:{NC} Found {GREEN}{title}{NC}") if title else None
+        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
+        if version:
+            versions: list[str | None] = aptoide.find_versions(apk_link)
+            if versions:
+                if version in versions:
+                    print(
+                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{apk_link}{NC}"
+                    )
+                else:
+                    print(f"{BOLD}Aptoide:{NC} Version {RED}{version}{NC} not found!")
+    else:
+        print(f"{BOLD}Aptoide:{NC} No Results!")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="APKSearch", description="Search for APKs on various websites"
@@ -186,6 +210,8 @@ def main():
     search(search_apkpure, pkg_name, version, log_err)
     # Initiate search on apkmirror
     search(search_apkmirror, pkg_name, version, log_err)
+    # Initiate search on aptoide
+    search(search_aptoide, pkg_name, version, log_err)
     # Initiate search on appteka
     search(search_appteka, pkg_name, version, log_err)
     # Initiate search on apkcombo

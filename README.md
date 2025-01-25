@@ -24,6 +24,7 @@ There were countless occasions when I needed a specific APK for a package name, 
 
 - [APKPure](https://apkpure.net/)
 - [APKMirror](https://www.apkmirror.com/)
+- [Aptoide](https://en.aptoide.com/)
 - [APKCombo](https://apkcombo.app/)
 - [APKFab](https://apkfab.com/)
 - [Appteka](https://appteka.store/)
@@ -111,6 +112,12 @@ if result:
 
 - **`__init__(self, pkg_name: str)`**: Initializes with the package name.
 - **`search_apk(self, version: str = None) -> None | tuple[str, str]`**: Searches for the APK and returns the title and link if found. If a version is provided, it checks if that version is available and returns the corresponding download link, None otherwise. If no version is provided, it returns the link for the latest version available.
+
+#### `Aptoide`
+
+- **`__init__(self, pkg_name: str)`**: Initializes with the package name.
+- **`search_apk(self) -> None | tuple[str, str]`**: Searches for the APK and returns the title and link if found.
+- **`find_version(self, apk_link: str, version: str) -> list[str]`**: Finds and returns the download links for the given APK link and versions list.
 
 ### Testing
 
