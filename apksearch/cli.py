@@ -183,7 +183,7 @@ def search_aptoide(pkg_name: str, version: str | None) -> None:
             if versions:
                 if version in versions:
                     print(
-                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{apk_link}{NC}"
+                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{apk_link}versions{NC}"
                     )
                 else:
                     print(f"{BOLD}Aptoide:{NC} Version {RED}{version}{NC} not found!")
