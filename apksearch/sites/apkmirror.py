@@ -1,4 +1,4 @@
-import requests
+from curl_cffi import requests
 
 
 class APKMirror:
