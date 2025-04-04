@@ -1,2 +1,2 @@
 beautifulsoup4>=4.12.3
-curl_cffi>=0.8.1b9
+requests>=2.32.3

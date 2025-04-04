@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apksearch"
-version = "1.2.8"
+version = "1.2.7"
 description = "Search for apks on varius websites"
 authors = [{ name = "Abhi", email = "allinoneallinone00@gmail.com" }]
 license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["beautifulsoup4>=4.12.3", "curl_cffi>=0.8.1b9"]
+dependencies = ["beautifulsoup4>=4.12.3", "requests>=2.32.3"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Natural Language :: English",
