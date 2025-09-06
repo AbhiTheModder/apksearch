@@ -29,7 +29,7 @@ class Aptoide:
     def __init__(self, pkg_name: str):
         self.pkg_name = pkg_name
         self.api_url = "https://ws75.aptoide.com/api/7"
-        self.search_url = f"{self.api_url}/apps/search?limit=1&query="
+        self.search_url = f"{self.api_url}/apps/search"
         self.headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
@@ -48,6 +48,20 @@ class Aptoide:
             "upgrade-insecure-requests": "1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
         }
+        self.params = {
+            "cdn": "web",
+            "q": "bXlDUFU9YXJtNjQtdjhhLGFybWVhYmktdjdhLGFybWVhYmkmbGVhbmJhY2s9MA",
+            "aab": "1",
+            "mature": "false",
+            "language": "en_US",
+            "country": "US",
+            "not_apk_tags": "",
+            "query": self.pkg_name,
+            "limit": "1",
+            "offset": "0",
+            "origin": "SITE",
+            "store_name": "aptoide-web",
+        }
         self.session = requests.Session()
 
     def search_apk(self) -> None | tuple[str, str]:
@@ -59,8 +73,10 @@ class Aptoide:
             tuple[str, str]: A tuple containing the title and link of the matching APK if found.
         """
         pkg_name = self.pkg_name
-        url = self.search_url + pkg_name
-        response: requests.Response = self.session.get(url, headers=self.headers)
+        url = self.search_url
+        response: requests.Response = self.session.get(
+            url, headers=self.headers, params=self.params
+        )
         data = response.json()
         if data and data["info"]["status"] == "OK":
             lis = data["datalist"]["list"]
