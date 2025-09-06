@@ -2,7 +2,7 @@ from apksearch.sites.apkfab import APKFab
 
 
 def test_search_apk():
-    query = "com.roblox.client"
+    query = "com.facebook.katana"
     apkfab = APKFab(query)
     result = apkfab.search_apk()
 
@@ -14,7 +14,7 @@ def test_search_apk():
 
 
 def test_find_versions():
-    query = "com.roblox.client"
+    query = "com.facebook.katana"
     apkfab = APKFab(query)
     result = apkfab.search_apk()
 
