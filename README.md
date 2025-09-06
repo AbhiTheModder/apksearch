@@ -134,7 +134,7 @@ pytest
 ## Acknowledgements
 
 - [APKUpdater](https://github.com/rumboalla/apkupdater) for APKMirror API.
-- [apkeep](https://github.com/EFForg/apkeep) for APKPure API.
+~~- [apkeep](https://github.com/EFForg/apkeep) for APKPure API.~~ (not used anymore)
 
 ## License
 

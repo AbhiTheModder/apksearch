@@ -11,3 +11,7 @@ wheels/
 
 # Dev Test file
 test.py
+
+# Others
+.envrc
+.direnv
