@@ -107,14 +107,6 @@ class APKPure:
             None: If no matching APK is found.
             tuple[str, str]: A tuple containing the title and link of the matching APK if found.
         """
-        # Try API first
-        api_result = self._api_search()
-        if api_result:
-            title, versions = api_result
-            if versions:
-                return title, versions[0][1]
-
-        # Fall back to web scrapping
         pkg_name = self.pkg_name
         url = self.search_url + pkg_name
         response: requests.Response = self.session.get(url, headers=self.headers)
@@ -138,7 +130,7 @@ class APKPure:
         try:
             location = response.headers.get("Location")
         except AttributeError:
-            return None
+            location = None
         if location:
             if location == "https://apkpure.com":
                 return None
@@ -152,6 +144,13 @@ class APKPure:
             if content:
                 apk_title = content.split("filename=")[1].strip('"').split("_")[0]
                 return apk_title, location
+
+        api_result = self._api_search()
+        if api_result:
+            title, versions = api_result
+            if versions:
+                return title, versions[0][1]
+    
         return None
 
     def find_versions(self, apk_link: str) -> list[tuple[str, str]]:

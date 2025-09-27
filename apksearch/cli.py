@@ -9,7 +9,6 @@ from apksearch import (
     APKFab,
     APKad,
     Aptoide,
-    APKMonk,
 )
 from requests.exceptions import ConnectionError, ConnectTimeout
 
@@ -200,32 +199,6 @@ def search_aptoide(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}Aptoide:{NC} No Results!")
 
 
-def search_apkmonk(pkg_name: str, version: str | None) -> None:
-    apkmonk = APKMonk(pkg_name)
-    try:
-        result_apkmonk: tuple[str, str] | None = apkmonk.search_apk()
-    except (ConnectionError, ConnectTimeout):
-        result_apkmonk = None
-        print(f"{RED}Failed to resolve 'apkmonk.com'!{NC}")
-    if result_apkmonk:
-        title, apk_link = result_apkmonk
-        print(f"{BOLD}APKMonk:{NC} Found {GREEN}{title}{NC}") if title else None
-        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
-        if version:
-            versions: list[tuple[str, str]] = apkmonk.find_versions(apk_link)
-            if versions:
-                for version_tuple in versions:
-                    if version_tuple[0] == version:
-                        print(
-                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
-                        )
-                        break
-                else:
-                    print(f"{BOLD}APKMonk:{NC} Version {RED}{version}{NC} not found!")
-    else:
-        print(f"{BOLD}APKMonk:{NC} No Results!")
-
-
 def main():
     parser = argparse.ArgumentParser(
         prog="APKSearch", description="Search for APKs on various websites"
@@ -255,8 +228,6 @@ def main():
     search(search_apkfab, pkg_name, version, log_err)
     # Initiate search on apkad
     search(search_apkad, pkg_name, version, log_err)
-    # Initiate search on apmonk
-    search(search_apkmonk, pkg_name, version, log_err)
 
 
 if __name__ == "__main__":
