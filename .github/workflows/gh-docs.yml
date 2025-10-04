@@ -1,0 +1,26 @@
+name: Build Documentation
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies and Build Documentation
+      run: |
+        cd docs
+        pip3 install -r requirements.txt
+        mkdocs gh-deploy --force

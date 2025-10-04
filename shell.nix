@@ -9,6 +9,10 @@ let
       beautifulsoup4
       pytest
       curl-cffi
+      mkdocs
+      mkdocs-material
+      mkdocstrings-python
+      mkdocs-glightbox
     ]
   );
 in
