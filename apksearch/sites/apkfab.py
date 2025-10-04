@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
-from apksearch.sites import requests
+
+from apksearch.sites import requests, curl
 
 
 class APKFab:
@@ -59,7 +60,10 @@ class APKFab:
         """
         pkg_name = self.pkg_name
         url = self.search_url + pkg_name
-        response: requests.Response = self.session.get(url, headers=self.headers)
+        params = {"headers": self.headers}
+        if curl:
+            params["impersonate"] = "chrome"
+        response: requests.Response = self.session.get(url, **params)
         soup = BeautifulSoup(response.text, "html.parser")
         search_result = soup.find("div", {"class": "search-white"})
         if search_result:

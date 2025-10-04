@@ -20,11 +20,12 @@ def test_find_versions_nfound():
     result = apkmirror.search_apk()
 
     if result:
+        title = result[0]
         apk_link = result[1]
 
         assert apk_link.startswith("https://"), "APK link should be a valid URL."
 
-        download_link = apkmirror.find_version(apk_link, version)
+        download_link = apkmirror.find_version(apk_link, version, title)
 
         assert download_link is None, "Version not found."
 
@@ -36,10 +37,11 @@ def test_find_versions_found():
     result = apkmirror.search_apk()
 
     if result:
+        title = result[0]
         apk_link = result[1]
-        download_link = apkmirror.find_version(apk_link, version)
+        download_link = apkmirror.find_version(apk_link, version, title)
 
         assert isinstance(download_link, str), "Download link should be a string."
-        assert download_link.startswith(
-            "https://"
-        ), "Download link should be a valid URL."
+        assert download_link.startswith("https://"), (
+            "Download link should be a valid URL."
+        )

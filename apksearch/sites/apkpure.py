@@ -1,5 +1,7 @@
 import re
+
 from bs4 import BeautifulSoup
+
 from apksearch.sites import requests
 
 
@@ -150,7 +152,7 @@ class APKPure:
             title, versions = api_result
             if versions:
                 return title, versions[0][1]
-    
+
         return None
 
     def find_versions(self, apk_link: str) -> list[tuple[str, str]]:

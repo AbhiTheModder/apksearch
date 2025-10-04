@@ -24,6 +24,6 @@ def test_find_versions():
 
         assert isinstance(versions, list), "Versions should be a list."
         assert len(versions) > 0, "No versions found."
-        assert all(
-            isinstance(version, str) for version in versions
-        ), "Each version should be a string."
+        assert all(isinstance(version, str) for version in versions), (
+            "Each version should be a string."
+        )

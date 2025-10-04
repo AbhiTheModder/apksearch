@@ -1,9 +1,9 @@
-from .sites.apkpure import APKPure
-from .sites.apkmirror import APKMirror
-from .sites.appteka import AppTeka
+from .sites.apkad import APKad
 from .sites.apkcombo import APKCombo
 from .sites.apkfab import APKFab
-from .sites.apkad import APKad
+from .sites.apkmirror import APKMirror
+from .sites.apkpure import APKPure
+from .sites.appteka import AppTeka
 from .sites.aptoide import Aptoide
 
 __all__ = [

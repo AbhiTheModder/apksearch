@@ -1,16 +1,17 @@
 import argparse
-
 from collections.abc import Callable
+
+from requests.exceptions import ConnectionError, ConnectTimeout
+
 from apksearch import (
-    APKPure,
-    APKMirror,
-    AppTeka,
+    APKad,
     APKCombo,
     APKFab,
-    APKad,
+    APKMirror,
+    APKPure,
+    AppTeka,
     Aptoide,
 )
-from requests.exceptions import ConnectionError, ConnectTimeout
 
 # Color codes
 BOLD = "\033[1m"
@@ -213,26 +214,44 @@ def main():
     parser.add_argument(
         "--log_err", help="Enable error logs", action="store_true", required=False
     )
+    parser.add_argument(
+        "--sites",
+        nargs="+",
+        choices=[
+            "apkpure",
+            "apkmirror",
+            "aptoide",
+            "appteka",
+            "apkcombo",
+            "apkfab",
+            "apkad",
+        ],
+        help="Specify the sites to search on",
+        required=False,
+    )
     args = parser.parse_args()
 
     pkg_name = args.pkg_name
     version = args.version
     log_err = args.log_err
+    sites = args.sites
+
     print(f"{BOLD}Searching for {YELLOW}{pkg_name}{NC}...")
-    # Initiate search on apkpure
-    search(search_apkpure, pkg_name, version, log_err)
-    # Initiate search on apkmirror
-    search(search_apkmirror, pkg_name, version, log_err)
-    # Initiate search on aptoide
-    search(search_aptoide, pkg_name, version, log_err)
-    # Initiate search on appteka
-    search(search_appteka, pkg_name, version, log_err)
-    # Initiate search on apkcombo
-    search(search_apkcombo, pkg_name, version, log_err)
-    # Initiate search on apkfab
-    search(search_apkfab, pkg_name, version, log_err)
-    # Initiate search on apkad
-    search(search_apkad, pkg_name, version, log_err)
+
+    if not sites or "apkpure" in sites:
+        search(search_apkpure, pkg_name, version, log_err)
+    if not sites or "apkmirror" in sites:
+        search(search_apkmirror, pkg_name, version, log_err)
+    if not sites or "aptoide" in sites:
+        search(search_aptoide, pkg_name, version, log_err)
+    if not sites or "appteka" in sites:
+        search(search_appteka, pkg_name, version, log_err)
+    if not sites or "apkcombo" in sites:
+        search(search_apkcombo, pkg_name, version, log_err)
+    if not sites or "apkfab" in sites:
+        search(search_apkfab, pkg_name, version, log_err)
+    if not sites or "apkad" in sites:
+        search(search_apkad, pkg_name, version, log_err)
 
 
 if __name__ == "__main__":
