@@ -21,6 +21,5 @@ jobs:
 
     - name: Install Dependencies and Build Documentation
       run: |
-        cd docs
-        pip3 install -r requirements.txt
+        pip3 install -r docs/requirements.txt
         mkdocs gh-deploy --force
