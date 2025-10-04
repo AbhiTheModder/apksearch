@@ -27,7 +27,7 @@ class APKCombo:
 
     def __init__(self, pkg_name: str):
         self.pkg_name = pkg_name
-        self.base_url = "https://apkcombo.app"
+        self.base_url = "https://apkcombo.com"
         self.search_url = self.base_url + "/search"
         self.headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -37,7 +37,7 @@ class APKCombo:
             "dnt": "1",
             "pragma": "no-cache",
             "priority": "u=0, i",
-            "referer": "https://apkcombo.app/",
+            "referer": "https://apkcombo.com/",
             "sec-ch-ua": '"Microsoft Edge";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": '"Windows"',
