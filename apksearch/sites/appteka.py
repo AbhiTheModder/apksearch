@@ -1,6 +1,6 @@
 import re
 from bs4 import BeautifulSoup
-import requests
+from apksearch.sites import requests
 
 
 class AppTeka:
@@ -48,7 +48,7 @@ class AppTeka:
         }
         self.session = requests.Session()
 
-    def search_apk(self, version: str = None) -> None | tuple[str, str]:
+    def search_apk(self, version: str | None = None) -> None | tuple[str, str | None]:
         """
         Searches for the APK on AppTeka and returns the title and link if found.
 

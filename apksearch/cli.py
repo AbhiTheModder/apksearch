@@ -21,7 +21,7 @@ NC = "\033[0m"
 
 
 def search(
-    func: Callable[[str, str], object],
+    func: Callable[[str, str | None], object],
     pkg_name: str,
     version: str | None,
     log_err: bool = False,
@@ -30,7 +30,8 @@ def search(
         func(pkg_name, version)
     except Exception as exc:
         if log_err:
-            print(f"Error in {func.__name__}: {exc}")
+            func_name = getattr(func, "__name__", func.__class__.__name__)
+            print(f"Error in {func_name}: {exc}")
         else:
             pass
 
@@ -141,7 +142,7 @@ def search_apkmirror(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}APKMirror:{NC} Found {GREEN}{title}{NC}") if title else None
         print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
         if version:
-            download_link = apkmirror.find_version(apk_link, version)
+            download_link = apkmirror.find_version(apk_link, version, title)
             if download_link:
                 print(
                     f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{download_link}{NC}"
@@ -155,7 +156,7 @@ def search_apkmirror(pkg_name: str, version: str | None) -> None:
 def search_appteka(pkg_name: str, version: str | None) -> None:
     appteka = AppTeka(pkg_name)
     try:
-        result_appteka: tuple[str, str] | None = appteka.search_apk(version)
+        result_appteka: tuple[str, str | None] | None = appteka.search_apk(version)
     except (ConnectionError, ConnectTimeout):
         result_appteka = None
         print(f"{RED}Failed to resolve 'appteka.store'!{NC}")

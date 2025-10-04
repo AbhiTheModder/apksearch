@@ -34,6 +34,7 @@ issues = "https://github.com/AbhiTheModder/apksearch.git/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=7.4.3", "black>=23.12.1", "flake8>=6.1.0"]
+curl = ["curl_cffi>=0.12.1b1"]
 
 [tool.pytest.ini_options]
 minversion = "7.4.3"

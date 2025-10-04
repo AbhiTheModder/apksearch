@@ -1,4 +1,5 @@
-import requests
+import re
+from apksearch.sites import requests
 
 
 class APKMirror:
@@ -59,7 +60,7 @@ class APKMirror:
                 return title, apk_link
         return None
 
-    def find_version(self, apk_link: str, version: str) -> str:
+    def find_version(self, apk_link: str, version: str, title: str) -> str | None:
         """
         Finds and returns the download link for the given APK link and version.
 
@@ -70,7 +71,8 @@ class APKMirror:
         Returns:
             str: The download link for the specified version of the APK.
         """
-        name = apk_link.split("/")[-2]
+        name = re.sub(r"[(),]", "", title).lower().replace(" ", "-")
+        name = re.sub(r"-+", "-", name)
         version = version.replace(".", "-")
         url = apk_link + name + "-" + version + "-release"
         response = self.session.get(url, headers=self.headers)

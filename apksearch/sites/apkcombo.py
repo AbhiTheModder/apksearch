@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import requests
+from apksearch.sites import requests
 
 
 class APKCombo:
