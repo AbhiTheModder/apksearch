@@ -22,13 +22,14 @@ NC = "\033[0m"
 
 
 def search(
-    func: Callable[[str, str | None], object],
+    func: Callable[[str, str | None, bool], object],
     pkg_name: str,
     version: str | None,
     log_err: bool = False,
+    list_versions: bool = False,
 ) -> None:
     try:
-        func(pkg_name, version)
+        func(pkg_name, version, list_versions)
     except Exception as exc:
         if log_err:
             func_name = getattr(func, "__name__", func.__class__.__name__)
@@ -37,7 +38,9 @@ def search(
             pass
 
 
-def search_apkpure(pkg_name: str, version: str | None) -> None:
+def search_apkpure(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     apkpure = APKPure(pkg_name)
     try:
         result_apkpure: tuple[str, str] | None = apkpure.search_apk()
@@ -47,23 +50,33 @@ def search_apkpure(pkg_name: str, version: str | None) -> None:
     if result_apkpure:
         title, apk_link = result_apkpure
         print(f"{BOLD}APKPure:{NC} Found {GREEN}{title}{NC}") if title else None
-        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
-        if version:
-            versions: list[tuple[str, str]] = apkpure.find_versions(apk_link)
+        versions: list[tuple[str, str]] = apkpure.find_versions(apk_link)
+        if list_versions:
             if versions:
-                for version_tuple in versions:
-                    if version_tuple[0] == version:
+                print(f"      ╰─> {BOLD}Available versions:{NC}")
+                for v, link in versions:
+                    print(f"            • {GREEN}{v}{NC} – {YELLOW}{link}{NC}")
+            else:
+                print(f"{BOLD}APKPure:{NC} No versions found.")
+        elif version:
+            if versions:
+                for v, link in versions:
+                    if v == version:
                         print(
-                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
+                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{link}{NC}"
                         )
                         break
                 else:
                     print(f"{BOLD}APKPure:{NC} Version {RED}{version}{NC} not found!")
+        else:
+            print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}")
     else:
         print(f"{BOLD}APKPure:{NC} No Results!")
 
 
-def search_apkfab(pkg_name: str, version: str | None) -> None:
+def search_apkfab(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     apkfab = APKFab(pkg_name)
     try:
         result_apkfab: tuple[str, str] | None = apkfab.search_apk()
@@ -73,23 +86,33 @@ def search_apkfab(pkg_name: str, version: str | None) -> None:
     if result_apkfab:
         title, apk_link = result_apkfab
         print(f"{BOLD}APKFab:{NC} Found {GREEN}{title}{NC}") if title else None
-        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
-        if version:
-            versions: list[tuple[str, str]] = apkfab.find_versions(apk_link)
+        versions: list[tuple[str, str]] = apkfab.find_versions(apk_link)
+        if list_versions:
             if versions:
-                for version_tuple in versions:
-                    if version_tuple[0] == version:
+                print(f"      ╰─> {BOLD}Available versions:{NC}")
+                for v, link in versions:
+                    print(f"            • {GREEN}{v}{NC} – {YELLOW}{link}{NC}")
+            else:
+                print(f"{BOLD}APKFab:{NC} No versions found.")
+        elif version:
+            if versions:
+                for v, link in versions:
+                    if v == version:
                         print(
-                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
+                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{link}{NC}"
                         )
                         break
                 else:
                     print(f"{BOLD}APKFab:{NC} Version {RED}{version}{NC} not found!")
+        else:
+            print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}")
     else:
         print(f"{BOLD}APKFab:{NC} No Results!")
 
 
-def search_apkad(pkg_name: str, version: str | None) -> None:
+def search_apkad(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     apkad = APKad(pkg_name)
     try:
         result_apkad: tuple[str, list[tuple[str, str]]] | None = apkad.search_apk()
@@ -99,7 +122,7 @@ def search_apkad(pkg_name: str, version: str | None) -> None:
     if result_apkad:
         title, apk_links = result_apkad
         print(f"{BOLD}APKAD:{NC} Found {GREEN}{title}{NC}") if title else None
-        if not version:
+        if not version or list_versions:
             print(f"      ╰─> {BOLD}Available APKs:{NC}")
             for i, (filename, url) in enumerate(apk_links, 1):
                 print(f"          {i}. {filename}")
@@ -110,7 +133,9 @@ def search_apkad(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}APKAD:{NC} No Results!")
 
 
-def search_apkcombo(pkg_name: str, version: str | None) -> None:
+def search_apkcombo(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     apkcombo = APKCombo(pkg_name)
     try:
         result_apkcombo: tuple[str, str] | None = apkcombo.search_apk()
@@ -122,20 +147,32 @@ def search_apkcombo(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}APKCombo:{NC} Found {GREEN}{title}{NC}") if title else None
         print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
         versions: list[tuple[str, str]] = apkcombo.find_versions(apk_link)
-        if version:
-            for version_tuple in versions:
-                if version_tuple[0] == version:
-                    print(
-                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{version_tuple[1]}{NC}"
-                    )
-                    break
+        if list_versions:
+            if versions:
+                print(f"      ╰─> {BOLD}Available versions:{NC}")
+                for v, link in versions:
+                    print(f"            • {GREEN}{v}{NC} – {YELLOW}{link}{NC}")
             else:
-                print(f"{BOLD}APKCombo:{NC} Version {RED}{version}{NC} not found!")
+                print(f"{BOLD}APKCombo:{NC} No versions found.")
+        elif version:
+            if versions:
+                for v, link in versions:
+                    if v == version:
+                        print(
+                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{link}{NC}"
+                        )
+                        break
+                else:
+                    print(f"{BOLD}APKCombo:{NC} Version {RED}{version}{NC} not found!")
+        else:
+            print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}")
     else:
         print(f"{BOLD}APKCombo:{NC} No Results!")
 
 
-def search_apkmirror(pkg_name: str, version: str | None) -> None:
+def search_apkmirror(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     apkmirror = APKMirror(pkg_name)
     try:
         result_apkmirror: tuple[str, str] | None = apkmirror.search_apk()
@@ -145,6 +182,9 @@ def search_apkmirror(pkg_name: str, version: str | None) -> None:
     if result_apkmirror:
         title, apk_link = result_apkmirror
         print(f"{BOLD}APKMirror:{NC} Found {GREEN}{title}{NC}") if title else None
+        print(
+            f"      ╰─> {BOLD}Note:{NC} AppTeka doesn't support listing all versions"
+        ) if list_versions else None
         print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
         if version:
             download_link = apkmirror.find_version(apk_link, version, title)
@@ -158,7 +198,9 @@ def search_apkmirror(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}APKMirror:{NC} No Results!")
 
 
-def search_appteka(pkg_name: str, version: str | None) -> None:
+def search_appteka(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     appteka = AppTeka(pkg_name)
     try:
         result_appteka: tuple[str, str | None] | None = appteka.search_apk(version)
@@ -168,6 +210,9 @@ def search_appteka(pkg_name: str, version: str | None) -> None:
     if result_appteka:
         title, apk_link = result_appteka
         print(f"{BOLD}AppTeka:{NC} Found {GREEN}{title}{NC}") if title else None
+        print(
+            f"      ╰─> {BOLD}Note:{NC} AppTeka doesn't support listing all versions"
+        ) if list_versions else None
         if version:
             if apk_link:
                 print(
@@ -181,7 +226,9 @@ def search_appteka(pkg_name: str, version: str | None) -> None:
         print(f"{BOLD}AppTeka:{NC} No Results!")
 
 
-def search_aptoide(pkg_name: str, version: str | None) -> None:
+def search_aptoide(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
     aptoide = Aptoide(pkg_name)
     try:
         result_aptoide: tuple[str, str] | None = aptoide.search_apk()
@@ -191,16 +238,18 @@ def search_aptoide(pkg_name: str, version: str | None) -> None:
     if result_aptoide:
         title, apk_link = result_aptoide
         print(f"{BOLD}Aptoide:{NC} Found {GREEN}{title}{NC}") if title else None
-        print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}") if not version else None
-        if version:
-            versions: list[str | None] = aptoide.find_versions(apk_link)
-            if versions:
-                if version in versions:
-                    print(
-                        f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{apk_link}versions{NC}"
-                    )
-                else:
-                    print(f"{BOLD}Aptoide:{NC} Version {RED}{version}{NC} not found!")
+
+        versions: list[str | None] = aptoide.find_versions(apk_link)
+
+        if list_versions:
+            print(f"      ╰─> {BOLD}Available versions:{NC} {GREEN}{versions}{NC}")
+        elif version:
+            if version in versions:
+                print(f"      ╰─> {BOLD}Version:{NC} {GREEN}{version}{NC}")
+        else:
+            print(f"{BOLD}Aptoide:{NC} No versions found.")
+
+        print(f"      ╰─> {BOLD}Link:{NC} {YELLOW}{apk_link}{NC}")
     else:
         print(f"{BOLD}Aptoide:{NC} No Results!")
 
@@ -210,11 +259,18 @@ def main():
         prog="APKSearch", description="Search for APKs on various websites"
     )
     parser.add_argument("pkg_name", help="The package name of the APK")
-    parser.add_argument("--version", help="The version of the APK", required=False)
     parser.add_argument(
-        "--log_err", help="Enable error logs", action="store_true", required=False
+        "-v", "--version", help="The version of the APK", required=False
     )
     parser.add_argument(
+        "-le",
+        "--log_err",
+        help="Enable error logs",
+        action="store_true",
+        required=False,
+    )
+    parser.add_argument(
+        "-s",
         "--sites",
         nargs="+",
         choices=[
@@ -229,29 +285,37 @@ def main():
         help="Specify the sites to search on",
         required=False,
     )
+    parser.add_argument(
+        "-lv",
+        "--list_vers",
+        help="List all versions found",
+        action="store_true",
+        required=False,
+    )
     args = parser.parse_args()
 
     pkg_name = args.pkg_name
     version = args.version
     log_err = args.log_err
     sites = args.sites
+    list_vers = args.list_vers
 
     print(f"{BOLD}Searching for {YELLOW}{pkg_name}{NC}...")
 
     if not sites or "apkpure" in sites:
-        search(search_apkpure, pkg_name, version, log_err)
+        search(search_apkpure, pkg_name, version, log_err, list_vers)
     if not sites or "apkmirror" in sites:
-        search(search_apkmirror, pkg_name, version, log_err)
+        search(search_apkmirror, pkg_name, version, log_err, list_vers)
     if not sites or "aptoide" in sites:
-        search(search_aptoide, pkg_name, version, log_err)
+        search(search_aptoide, pkg_name, version, log_err, list_vers)
     if not sites or "appteka" in sites:
-        search(search_appteka, pkg_name, version, log_err)
+        search(search_appteka, pkg_name, version, log_err, list_vers)
     if not sites or "apkcombo" in sites:
-        search(search_apkcombo, pkg_name, version, log_err)
+        search(search_apkcombo, pkg_name, version, log_err, list_vers)
     if not sites or "apkfab" in sites:
-        search(search_apkfab, pkg_name, version, log_err)
+        search(search_apkfab, pkg_name, version, log_err, list_vers)
     if not sites or "apkad" in sites:
-        search(search_apkad, pkg_name, version, log_err)
+        search(search_apkad, pkg_name, version, log_err, list_vers)
 
 
 if __name__ == "__main__":

@@ -111,7 +111,7 @@ class Aptoide:
 
         url = apk_link + "/versions"
         response: requests.Response = self.session.get(url, headers=self.headers)
-        soup = BeautifulSoup(response.content, "html.parser")
+        soup = BeautifulSoup(response.text, "html.parser")
         version_spans = soup.find_all("span", string=re.compile(r"^\d+\.\d+\.\d+$"))
         for span in version_spans:
             version = span.text
