@@ -2,7 +2,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from apksearch.sites import requests
+from apksearch.sites import curl, requests
 
 
 class Aptoide:
@@ -64,7 +64,10 @@ class Aptoide:
             "origin": "SITE",
             "store_name": "aptoide-web",
         }
-        self.session = requests.Session()
+        if curl:
+            self.session = requests.Session(impersonate="chrome")
+        else:
+            self.session = requests.Session()
 
     def search_apk(self) -> None | tuple[str, str]:
         """
@@ -117,5 +120,27 @@ class Aptoide:
             version = span.text.strip()
             if version not in versions_info:
                 versions_info.append(version)
+
+        if not versions_info:
+            import json
+
+            match = re.search(
+                r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
+                response.text,
+            )
+            if match:
+                try:
+                    data = json.loads(match.group(1))
+                    versions_list = (
+                        data.get("props", {})
+                        .get("pageProps", {})
+                        .get("versions", [])
+                    )
+                    for v in versions_list:
+                        ver_name = v.get("vername")
+                        if ver_name and ver_name not in versions_info:
+                            versions_info.append(ver_name)
+                except Exception:
+                    pass
 
         return versions_info
