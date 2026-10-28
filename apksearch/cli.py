@@ -6,6 +6,7 @@ from requests.exceptions import ConnectionError, ConnectTimeout
 from apksearch import (
     APKad,
     APKCombo,
+    APKCube,
     APKFab,
     APKMirror,
     APKPure,
@@ -254,6 +255,42 @@ def search_aptoide(
         print(f"{BOLD}Aptoide:{NC} No Results!")
 
 
+def search_apkcube(
+    pkg_name: str, version: str | None, list_versions: bool = False
+) -> None:
+    apkcube = APKCube(pkg_name)
+    try:
+        result_apkcube: tuple[str, str] | None = apkcube.search_apk()
+    except (ConnectionError, ConnectTimeout):
+        result_apkcube = None
+        print(f"{RED}Failed to resolve 'apkcube.com'!{NC}")
+    if result_apkcube:
+        title, apk_link = result_apkcube
+        print(f"{BOLD}APKCube:{NC} Found {GREEN}{title}{NC}") if title else None
+        versions: list[tuple[str, str]] = apkcube.find_versions(apk_link)
+        if list_versions:
+            if versions:
+                print(f"      ╰─> {BOLD}Available versions:{NC}")
+                for v, link in versions:
+                    print(f"            • {GREEN}{v}{NC} – {YELLOW}{link}{NC}")
+            else:
+                print(f"{BOLD}APKCube:{NC} No versions found.")
+        elif version:
+            if versions:
+                for v, link in versions:
+                    if v == version:
+                        print(
+                            f"      ╰─> {BOLD}Version: {GREEN}{version}{NC} - {YELLOW}{link}{NC}"
+                        )
+                        break
+                else:
+                    print(f"{BOLD}APKCube:{NC} Version {RED}{version}{NC} not found!")
+        else:
+            print(f"      ╰─> {BOLD}Link: {YELLOW}{apk_link}{NC}")
+    else:
+        print(f"{BOLD}APKCube:{NC} No Results!")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="APKSearch", description="Search for APKs on various websites"
@@ -281,6 +318,7 @@ def main():
             "apkcombo",
             "apkfab",
             "apkad",
+            "apkcube",
         ],
         help="Specify the sites to search on",
         required=False,
@@ -316,6 +354,8 @@ def main():
         search(search_apkfab, pkg_name, version, log_err, list_vers)
     if not sites or "apkad" in sites:
         search(search_apkad, pkg_name, version, log_err, list_vers)
+    if not sites or "apkcube" in sites:
+        search(search_apkcube, pkg_name, version, log_err, list_vers)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from .sites.apkad import APKad
 from .sites.apkcombo import APKCombo
+from .sites.apkcube import APKCube
 from .sites.apkfab import APKFab
 from .sites.apkmirror import APKMirror
 from .sites.apkpure import APKPure
@@ -14,4 +15,5 @@ __all__ = [
     "APKFab",
     "APKad",
     "Aptoide",
+    "APKCube",
 ]
