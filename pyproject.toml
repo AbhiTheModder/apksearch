@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apksearch"
-version = "1.3.5"
+version = "1.4.0"
 description = "Search for apks on varius websites"
 authors = [{ name = "Abhi", email = "abhi@revengi.in" }]
 license = { file = "LICENSE" }
@@ -20,6 +20,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: General",
     "Topic :: Utilities",
