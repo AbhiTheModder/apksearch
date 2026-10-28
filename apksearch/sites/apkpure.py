@@ -2,7 +2,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from apksearch.sites import requests
+from apksearch.sites import curl, requests
 
 
 class APKPure:
@@ -65,7 +65,10 @@ class APKPure:
             "upgrade-insecure-requests": "1",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
         }
-        self.session = requests.Session()
+        if curl:
+            self.session = requests.Session(impersonate="chrome")
+        else:
+            self.session = requests.Session()
 
     def _api_search(self) -> None | tuple[str, list[tuple[str, str]]]:
         """
@@ -111,41 +114,48 @@ class APKPure:
         """
         pkg_name = self.pkg_name
         url = self.search_url + pkg_name
-        response: requests.Response = self.session.get(url, headers=self.headers)
-        soup = BeautifulSoup(response.text, "html.parser")
-        search_results = soup.find("div", {"class": "apk-list"})
-        if search_results:
-            apk_items = search_results.find_all("a", {"class": "apk-item"})
-            if apk_items:
-                for apk_item in apk_items:
-                    apk_link = self.base_url + apk_item["href"]
-                    apk_title = apk_item["title"]
-                    apk_package_name = apk_item["data-dt-pkg"]
-                    if apk_package_name == pkg_name:
-                        return apk_title, apk_link
+        try:
+            response: requests.Response = self.session.get(url, headers=self.headers)
+            soup = BeautifulSoup(response.text, "html.parser")
+            search_results = soup.find("div", {"class": "apk-list"})
+            if search_results:
+                apk_items = search_results.find_all("a", {"class": "apk-item"})
+                if apk_items:
+                    for apk_item in apk_items:
+                        apk_link = self.base_url + apk_item["href"]
+                        apk_title = apk_item["title"]
+                        apk_package_name = apk_item["data-dt-pkg"]
+                        if apk_package_name == pkg_name:
+                            return apk_title, apk_link
+        except Exception:
+            pass
+
         # If site search resulted 0 results, try cdn link
         # https://github.com/AbhiTheModder/apksearch/issues/2
         url = self.cdn_url + pkg_name + self.cdn_version + "latest"
-        response: requests.Response = self.session.get(
-            url, headers=self.headers, allow_redirects=False
-        )
         try:
-            location = response.headers.get("Location")
-        except AttributeError:
-            location = None
-        if location:
-            if location == "https://apkpure.com":
-                return None
-            response: requests.Response = self.session.head(
-                location, allow_redirects=False
+            response: requests.Response = self.session.get(
+                url, headers=self.headers, allow_redirects=False
             )
             try:
-                content = response.headers.get("Content-Disposition")
+                location = response.headers.get("Location")
             except AttributeError:
-                return None
-            if content:
-                apk_title = content.split("filename=")[1].strip('"').split("_")[0]
-                return apk_title, location
+                location = None
+            if location:
+                if location == "https://apkpure.com":
+                    return None
+                response: requests.Response = self.session.head(
+                    location, allow_redirects=False
+                )
+                try:
+                    content = response.headers.get("Content-Disposition")
+                except AttributeError:
+                    content = None
+                if content:
+                    apk_title = content.split("filename=")[1].strip('"').split("_")[0]
+                    return apk_title, location
+        except Exception:
+            pass
 
         api_result = self._api_search()
         if api_result:

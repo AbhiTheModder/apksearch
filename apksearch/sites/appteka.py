@@ -1,4 +1,5 @@
 import re
+import urllib.parse
 
 from bs4 import BeautifulSoup
 
@@ -29,7 +30,7 @@ class AppTeka:
     def __init__(self, pkg_name: str):
         self.pkg_name = pkg_name
         self.base_url = "https://appteka.store"
-        self.search_url = self.base_url + "/list/?query="
+        self.search_url = self.base_url + "/search?q="
         self.headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "accept-language": "en-US,en;q=0.9,en-IN;q=0.8",
@@ -37,7 +38,7 @@ class AppTeka:
             "dnt": "1",
             "connection": "keep-alive",
             "pragma": "no-cache",
-            "referer": "https://appteka.store/list/",
+            "referer": "https://appteka.store/",
             "sec-ch-ua": '"Microsoft Edge";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": '"Windows"',
@@ -65,62 +66,61 @@ class AppTeka:
         url = self.search_url + pkg_name
         response: requests.Response = self.session.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
-        search_results = soup.find("div", {"class": "list-group"})
-        if search_results:
-            apk_items = search_results.find_all(
-                "a",
-                {"class": "list-group-item list-group-item-action d-flex gap-3 py-3"},
-            )
-            if apk_items:
-                for apk_item in apk_items:
-                    apk_link = self.base_url + apk_item["href"]
-                    apk_title = apk_item.find(
-                        "strong", {"class": "text-gray-dark"}
-                    ).text.strip()
-                    # Unfortunately, AppTeka does not provide a package name in the search results.
-                    # So, we can't compare the package names here.
-                    # We can instead do a workaround by doing a request to the apk_link and check the package name there.
-                    new_url = apk_link
-                    new_response: requests.Response = self.session.get(
-                        new_url, headers=self.headers
-                    )
-                    new_soup = BeautifulSoup(new_response.text, "html.parser")
-                    rows = new_soup.find_all("dl", {"class": "row"})
-                    for row in rows:
-                        dt_tags = row.find_all("dt")
-                        dd_tags = row.find_all("dd")
-                        for dt, dd in zip(dt_tags, dd_tags):
-                            if dt.text.strip() == "Package":
-                                package_name = dd.text.strip()
-                                if package_name == pkg_name:
-                                    # Appteka also stores the list of all the versions on same page
-                                    # So, if the version param is given then we can check if the version is available or not
-                                    if version:
-                                        version_modal = new_soup.find(
-                                            "div", {"id": "versionsModal"}
-                                        )
-                                        if version_modal:
-                                            version_links = version_modal.find_all(
-                                                "a",
-                                                {
-                                                    "class": re.compile(
-                                                        "^list-group-item list-group-item-action*"
-                                                    )
-                                                },
-                                            )
-                                            for link in version_links:
-                                                version_text = (
-                                                    link.find("p", {"class": "m-1"})
-                                                    .text.strip()
-                                                    .split("\xa0")[0]
-                                                )
-                                                if version_text == version:
-                                                    apk_link = (
-                                                        self.base_url + link["href"]
-                                                    )
-                                                    return apk_title, apk_link
-                                            return apk_title, None
-                                    else:
-                                        return apk_title, apk_link
+
+        seen_links = set()
+        for a in soup.find_all("a", href=True):
+            href = a["href"].split("?")[0]
+            if href.startswith("/apps/") and href not in seen_links:
+                seen_links.add(href)
+                apk_link = urllib.parse.urljoin(self.base_url, href)
+                new_response: requests.Response = self.session.get(
+                    apk_link, headers=self.headers
+                )
+                new_soup = BeautifulSoup(new_response.text, "html.parser")
+
+                package_name = None
+                for dt in new_soup.find_all("dt"):
+                    if dt.text.strip().lower() == "package":
+                        dd = dt.find_next_sibling("dd")
+                        if dd:
+                            package_name = dd.text.strip()
+                            break
+
+                if package_name == pkg_name:
+                    h1 = new_soup.find("h1")
+                    apk_title = h1.text.strip() if h1 else pkg_name
+
+                    if version:
+                        # Check current version on page
+                        for dt in new_soup.find_all("dt"):
+                            if dt.text.strip().lower() == "version":
+                                dd = dt.find_next_sibling("dd")
+                                if dd and dd.text.strip().split()[0] == version:
+                                    return apk_title, apk_link
+
+                        # Check HTML version links in other versions section
+                        for va in new_soup.find_all("a", href=True):
+                            if va["href"].startswith("/apps/") and "v" in va.text:
+                                ver_text = va.text.strip().lstrip("v").strip()
+                                if ver_text == version:
+                                    return (
+                                        apk_title,
+                                        urllib.parse.urljoin(
+                                            self.base_url, va["href"].split("?")[0]
+                                        ),
+                                    )
+
+                        # Check versions embedded in page JSON script
+                        matches = re.findall(
+                            r'app_id\\*":\\*"([^\\"]+)\\*",\\*"ver_name\\*":\\*"([^\\"]+)\\*"',
+                            new_response.text,
+                        )
+                        for app_id, ver_name in matches:
+                            if ver_name == version:
+                                return apk_title, f"{self.base_url}/apps/{app_id}"
+
+                        return apk_title, None
+                    else:
+                        return apk_title, apk_link
 
         return None

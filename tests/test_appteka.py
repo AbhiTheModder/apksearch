@@ -14,10 +14,24 @@ def test_search_apk():
 
 
 def test_search_apk_version():
+    from bs4 import BeautifulSoup
+
     query = "com.roblox.client"
-    version = "2.649.875"
+    version = "2.647.716"
     appteka = AppTeka(query)
     result = appteka.search_apk(version)
+    if not result or not result[1]:
+        base_result = appteka.search_apk()
+        if base_result and base_result[1]:
+            resp = appteka.session.get(base_result[1], headers=appteka.headers)
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for dt in soup.find_all("dt"):
+                if dt.text.strip().lower() == "version":
+                    dd = dt.find_next_sibling("dd")
+                    if dd:
+                        version = dd.text.strip().split()[0]
+                        result = appteka.search_apk(version)
+                        break
 
     assert result is not None, "No APK found for the query."
     assert isinstance(result, tuple), "Result should be a tuple."

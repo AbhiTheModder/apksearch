@@ -109,12 +109,13 @@ class Aptoide:
         """
         versions_info = []
 
-        url = apk_link + "/versions"
+        url = apk_link.rstrip("/") + "/versions"
         response: requests.Response = self.session.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
         version_spans = soup.find_all("span", string=re.compile(r"^\d+\.\d+\.\d+$"))
         for span in version_spans:
-            version = span.text
-            versions_info.append(version)
+            version = span.text.strip()
+            if version not in versions_info:
+                versions_info.append(version)
 
         return versions_info
