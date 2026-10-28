@@ -1,3 +1,6 @@
+import os
+import pytest
+
 from apksearch.sites.aptoide import Aptoide
 
 
@@ -13,6 +16,10 @@ def test_search_apk():
     assert isinstance(result[1], str), "Second element of the tuple should be a string."
 
 
+@pytest.mark.skipif(
+    os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true",
+    reason="Cloudflare blocks datacenter IPs in CI",
+)
 def test_find_versions():
     query = "com.roblox.client"
     aptoide = Aptoide(query)
